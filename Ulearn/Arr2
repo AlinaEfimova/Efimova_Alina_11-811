@@ -1,0 +1,33 @@
+using System;
+
+namespace Arr2
+{
+    class Program
+    {
+        static void Main()
+        {
+            var array = new[] {  0, 0, 0, 0, 0, 4, 3 };
+            int temp = 0, temp2 = 0, k = 0;
+            int a = 9;
+            int b = 4;
+            for (int i = 0; i < array.Length; i++)  //Перевод в 10 систему
+            {
+                temp += array[i] * (int)Math.Pow(a, array.Length - i - 1);
+            }
+            Console.WriteLine(temp); //Вывод в 10 системе 
+            while (temp >= 0) //Перевод из 10 в b
+            {
+                temp2 += (temp % b) * (int)Math.Pow(10, k);
+                temp = temp / b;
+                k++;
+                if (temp < b)
+                {
+                    temp2 += temp * (int)Math.Pow(10, k);
+                    break;
+                }
+            }
+            Console.WriteLine(temp2);
+            Console.ReadKey();
+        }
+    }
+}
