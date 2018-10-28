@@ -1,0 +1,36 @@
+using System;
+
+namespace Map
+{
+    class Program
+    {
+        static void Main()
+        {
+            var width = int.Parse(Console.ReadLine());
+            Console.SetCursorPosition(0, 0);
+            Console.Write("  \r");
+            var height = int.Parse(Console.ReadLine());
+            Console.SetCursorPosition(0, 0);
+            Console.Write("  \r");
+            
+            CreateString(width, "♥");
+            Console.SetCursorPosition(0, 1);
+            for (int i = 2; i < height; i++)
+            {
+                Console.Write("♥");
+                CreateString(width - 2, " ");
+                Console.Write("♥");
+                Console.SetCursorPosition(0, i);
+            }
+            CreateString(width, "♥");
+            Console.SetCursorPosition(0, 0);
+            Console.ReadKey();
+        }
+
+        public static void CreateString(int width, string str)
+        {
+            for (int i = 0; i < width; i++)
+                Console.Write(str);
+        }
+    }
+}
