@@ -1,0 +1,32 @@
+using System;
+
+namespace Loops3
+{
+    class Program
+    {
+        static void Main()
+        {
+            int k = int.Parse(Console.ReadLine()) - 1; 
+            int temp = 9, i = 1, num; 
+            while (k - temp > 0)
+            {
+                i++;
+                k = k - temp;
+                temp = temp * 10 / (i - 1) * i;
+            }
+            num = (int)Math.Pow(10, i - 1); //минимальное i-значное число
+            for (int j = 1; j <= i; j++)
+            {
+                if (k / (i * (int)Math.Pow(10, i - j)) > 0) 
+                {
+                    num += (k / (i * (int)Math.Pow(10, i - j))) * (int)Math.Pow(10, i - j); 
+                    k = k % (i * (int)Math.Pow(10, i - j)); 
+                }
+            }
+            string result = "" + num;
+            Console.WriteLine("Число на этой позиции - {0}", result);
+            Console.WriteLine("Цифра на этой поизиции - {0}", result[k]);
+            Console.ReadKey();
+        }
+    }
+}
