@@ -1,0 +1,22 @@
+using System;
+
+namespace Loops1
+{
+    class Program
+    {
+        static void Main()
+        {
+            int number = int.Parse(Console.ReadLine());
+            int result = 0, digit;
+            while (number > 0)
+            {
+                digit = number % 10;
+                number = number / 10;
+                result = result * 10;
+                result = result + digit;
+            }
+            Console.WriteLine(result);
+            Console.ReadKey();
+        }
+    }
+}
