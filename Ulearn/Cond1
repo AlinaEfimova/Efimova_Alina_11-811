@@ -1,0 +1,70 @@
+using System;
+
+namespace Cond1
+{
+    class Program
+    {
+        static void Main()
+        {
+            Console.Write("Firts position - ");
+            string from = Console.ReadLine();
+            Console.Write("Second position - ");
+            string to = Console.ReadLine();
+            Bishop(from, to);
+            Knight(from, to);
+            Rook(from, to);
+            Queen(from, to);
+            King(from, to);
+            Main();
+        }
+        public static void Bishop(string from, string to)
+        {
+            var dx = Math.Abs(to[0] - from[0]);
+            var dy = Math.Abs(to[1] - from[1]);
+            if ((dx == dy) && (from != to))
+                Console.WriteLine("Bishop - correct");
+            else
+                Console.WriteLine("Bishop - uncorrect");
+        }
+
+        public static void Knight(string from, string to)
+        {
+            var dx = Math.Abs(to[0] - from[0]);
+            var dy = Math.Abs(to[1] - from[1]);
+            if (((dx == 2) && (dy == 1) || (dx == 1) && (dy == 2)) && (from != to))
+                Console.WriteLine("Knight - correct");
+            else
+                Console.WriteLine("Knight - uncorrect");
+        }
+
+        public static void Rook(string from, string to)
+        {
+            var dx = Math.Abs(to[0] - from[0]);
+            var dy = Math.Abs(to[1] - from[1]);
+            if ((dx == 0 || dy == 0) && (from != to))
+                Console.WriteLine("Rook - correct");
+            else
+                Console.WriteLine("Rook - uncorrect");
+        }
+
+        public static void Queen(string from, string to)
+        {
+            var dx = Math.Abs(to[0] - from[0]);
+            var dy = Math.Abs(to[1] - from[1]);
+            if ((dx == dy || dx == 0 || dy == 0) && (from != to))
+                Console.WriteLine("Queen - correct");
+            else
+                Console.WriteLine("Queen - uncorrect");
+        }
+
+        public static void King(string from, string to)
+        {
+            var dx = Math.Abs(to[0] - from[0]);
+            var dy = Math.Abs(to[1] - from[1]);
+            if ((((dx == 1) || (dx == 0)) && ((dy == 1) || (dy == 0))) && (from != to))
+                Console.WriteLine("King - correct");
+            else
+                Console.WriteLine("King - uncorrect");
+        }
+    }
+}
