@@ -1,0 +1,28 @@
+using System;
+
+namespace Cond3
+{
+    class Program
+    {
+        static void Main()
+        {
+            int next, fnext, snext, prev, fprev, sprev;
+            Console.Write("Number of ticket - ");
+            int x = int.Parse(Console.ReadLine());
+            next = x + 1;
+            prev = x - 1;
+            fnext = next / 1000;
+            snext = next % 1000;
+            fprev = prev / 1000;
+            sprev = prev % 1000;
+            fnext = (fnext / 100) + ((fnext % 100) / 10) + (fnext % 10);
+            snext = (snext / 100) + ((snext % 100) / 10) + (snext % 10);
+            fprev = (fprev / 100) + ((fprev % 100) / 10) + (fprev % 10);
+            sprev = (sprev / 100) + ((sprev % 100) / 10) + (sprev % 10);
+            if ((fnext == snext) || (fprev == sprev))
+                Console.WriteLine("True");
+            else Console.WriteLine("False");
+            Console.ReadKey();
+        }
+    }
+}
