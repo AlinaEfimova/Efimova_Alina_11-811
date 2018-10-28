@@ -1,0 +1,78 @@
+using System;
+
+namespace Arr3
+{
+    class Program
+    {
+        static void Main()
+        {
+            string str = "";
+            int a = 471, b = 900, temp = 0;
+            a = a * 10;
+            while (temp < 7)
+            {
+                if (HaveThis(str, a / b)) break;
+                if (a / b < 1)
+                {
+                    a *= 10;
+                    str += 0;
+                }
+                else
+                {
+                    str += a / b;
+                    a = (a % b) * 10;
+                }
+                temp++;
+            }
+            string result = FinalChanges(str, a / b);
+            Console.WriteLine(result);
+            Console.ReadKey();
+        }
+
+        public static bool HaveThis(string str, int a)
+        {
+            var array = StringToArray(str);
+            foreach (var e in array)
+                if (e == a)
+                    return true;
+            return false;
+        }
+
+        public static string FinalChanges(string str, int a)
+        {
+            string final = "0.";
+            var array = StringToArray(str);
+            int start = int.MaxValue;
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i] != a)
+                    final += array[i];
+                else
+                {
+                    start = i;
+                    break;
+                }
+            }
+            if (start < array.Length)
+            {
+                final += '(';
+                for (int j = start; j < array.Length; j++)
+                {
+                    final += array[j];
+                }
+                final += ')';
+            }
+            return final;
+        }
+
+        public static int[] StringToArray(string str)
+        {
+            var array = new int[str.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                array[i] = str[i] - '0';
+            }
+            return array;
+        }
+    }
+}
