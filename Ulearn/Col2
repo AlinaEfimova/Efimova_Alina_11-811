@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Col2
+{
+    class Program
+    {
+        static void Main()
+        {
+            var list = CreateList();
+            do
+            {
+                Console.Write("\r \r");
+                Console.Write("L = ");
+                var l = int.Parse(Console.ReadLine());
+                Console.Write("R = ");
+                var r = int.Parse(Console.ReadLine());
+                Console.Write("Насколько увеличить: ");
+                var x = int.Parse(Console.ReadLine());
+                list = ChangeList(list, l, r, x);
+                Console.WriteLine("Для нового запроса нажмите 1");
+            }
+            while (Console.ReadKey().KeyChar == '1');
+            Console.Write("\r \r");
+            for (int i = 0; i < list.Count; i++)
+            {
+                Console.WriteLine($"{i+1}: {list[i]}");
+            }
+            Console.ReadKey();
+        }
+
+        public static List<int> CreateList()
+        {
+            var arrayOfLines = File.ReadAllLines("array.txt");
+            var list = new List<int>();
+            foreach (var lines in arrayOfLines)
+            {
+                list.Add(int.Parse(lines));
+            }
+            return list;
+        }
+
+        public static List<int> ChangeList(List<int> list, int l, int r, int x)
+        {
+            for (int i = l - 1; i < r; i++)
+            {
+                list[i] += x;
+            }
+            return list;
+        }
+
+        //Создание файла с count нулями
+        //static void Main()
+        //{
+        //    Console.WriteLine("Enter the number of elements: ");
+        //    var count = int.Parse(Console.ReadLine());
+        //    var array = new string[count];
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        array[i] = "0";
+        //    }
+        //    File.WriteAllLines("array.txt", array);
+        //}
+    }
+}
