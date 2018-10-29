@@ -1,0 +1,60 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Col1
+{
+    class Program
+    {
+        static void Main()
+        {
+            var list = CreateList();
+            Console.Write("First position: ");
+            var l = int.Parse(Console.ReadLine());
+            Console.Write("Last position: ");
+            var r = int.Parse(Console.ReadLine());
+            var answer = Sum(list, l, r);
+            Console.WriteLine($"Sum = {answer}");
+            Console.ReadKey();
+        }
+
+        public static List<int> CreateList()
+        {
+            var arrayOfLines = File.ReadAllLines("array.txt");
+            var list = new List<int>();
+            foreach (var lines in arrayOfLines)
+            {
+                list.Add(int.Parse(lines));
+            }
+            return list;
+        }
+
+        public static int Sum(List<int> list, int l, int r)
+        {
+            int sum = 0;
+            for (int i = l - 1; i < r; i++)
+            {
+                sum += list[i];
+            }
+            return sum;
+        }
+
+        //Создание файла с count чисел от min до max
+        //static void Main()
+        //{
+        //    Console.WriteLine("Enter the number of elements: ");
+        //    var count = int.Parse(Console.ReadLine());
+        //    Console.WriteLine("Enter the minimum value: ");
+        //    var min = int.Parse(Console.ReadLine());
+        //    Console.WriteLine("Enter maximum value: ");
+        //    var max = int.Parse(Console.ReadLine());
+        //    var array = new string[count];
+        //    var rng = new Random();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        array[i] = "" + rng.Next(min, max);
+        //    }
+        //    File.WriteAllLines("array.txt", array);
+        //}
+    }
+}
