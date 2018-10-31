@@ -1,0 +1,106 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
+namespace Col3
+{
+    class Program
+    {
+        static void Main()
+        {
+            var list = CreateList();
+            var dictionary = new Dictionary<string, int>();
+            string maxKey = "";
+            int maxSum = int.MinValue;
+            for (int i = 1; i <= list.Count; i++)
+            {
+                for (int j = 0; j <= list.Count - i; j++)
+                {
+                    dictionary = FindSum(dictionary, list, j, i);
+                }
+            }
+            foreach (var e in dictionary)
+            {
+                if (e.Value > maxSum)
+                {
+                    maxSum = e.Value;
+                    maxKey = e.Key;
+                }
+            }
+            Console.WriteLine(maxKey);
+            Console.WriteLine("Their amount: {0}", maxSum);
+            Console.WriteLine("if you wanna see all array, press 1");
+            if (Console.ReadKey().KeyChar == '1')
+            {
+                Console.Write("\r \r");
+                OutArray(maxKey, maxSum, list);
+            }
+            Console.ReadKey();
+        }
+
+        public static void OutArray(string key, int valuue, List<int> list)
+        {
+            var splitters = key.Where(x => !char.IsDigit(x)).ToArray();
+            var startAndWidthV1 = key.Split(splitters);
+            var startAndWidth = new string[2];
+            int k = 0;
+            foreach (var e in startAndWidthV1)
+            {
+                if (e.Length != 0)
+                {
+                    startAndWidth[k] = e;
+                    k++;
+                }
+            }
+            var start = int.Parse(startAndWidth[0]);
+            var width = int.Parse(startAndWidth[1]);
+            var finalList = new List<int>();
+            for (int i = start; i < start + width; i++)
+            {
+                finalList.Add(list[i]);
+            }
+            Console.WriteLine(string.Join(", ", finalList));
+        }
+
+        public static List<int> CreateList()
+        {
+            var arrayOfLines = File.ReadAllLines("array.txt");
+            var list = new List<int>();
+            foreach (var lines in arrayOfLines)
+            {
+                list.Add(int.Parse(lines));
+            }
+            return list;
+        }
+
+        public static Dictionary<string, int> FindSum(Dictionary<string, int> dic, List<int> list, int start, int width)
+        {
+            int sum = 0;
+            for (int i = start; i < start + width; i++)
+            {
+                sum += list[i];
+            }
+            dic.Add("start position: " + start + "\nwidth: " + width, sum);
+            return dic;
+        }
+
+        //Создание файла с count чисел от min до max
+        //static void Main()
+        //{
+        //    Console.WriteLine("Enter the number of elements: ");
+        //    var count = int.Parse(Console.ReadLine());
+        //    Console.WriteLine("Enter the minimum value: ");
+        //    var min = int.Parse(Console.ReadLine());
+        //    Console.WriteLine("Enter maximum value: ");
+        //    var max = int.Parse(Console.ReadLine());
+        //    var array = new string[count];
+        //    var rng = new Random();
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        array[i] = "" + rng.Next(min, max);
+        //    }
+        //    File.WriteAllLines("array.txt", array);
+        //}
+    }
+}
