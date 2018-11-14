@@ -1,0 +1,60 @@
+using System;
+
+namespace Rec2
+{
+    class Program
+    {
+        static void Main()
+        {
+            var matr = new int[,] { { 1, 1 }, { 1, 0 } };
+            Console.Write("n = ");
+            int n = int.Parse(Console.ReadLine());
+            RecFib(matr, n);
+            Console.WriteLine(RecFib(matr, n)[0,1]);
+            Console.WriteLine(SimpleFib(matr, n));
+            Console.ReadKey();
+        }
+
+        public static int[,] RecFib(int[,] matr, int n)
+        {
+            if (n == 1)
+                return matr;
+            if (n % 2 == 0)
+            {
+                var temp = RecFib(matr, n / 2);
+                return MatrMultiply(temp, temp);
+            }
+            else
+            {
+                var temp = RecFib(matr, (n - 1) / 2);
+                return MatrMultiply(MatrMultiply(temp, temp), matr);
+            }
+        }
+
+        public static int SimpleFib(int[,] matr, int n)
+        {
+            var result = new int[,] { { 1, 0 }, { 0, 1 } };
+            while (n != 0)
+            {
+                if (n % 2 == 1)
+                    result = MatrMultiply(result, matr);
+                n = n >> 1;
+                matr = MatrMultiply(matr, matr);
+            }
+            return result[0,1];
+        }
+
+        public static int[,] MatrMultiply(int[,] matr1, int[,] matr2)
+        {
+            var matrMult = new int[2, 2];
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    matrMult[i, j] = matr1[i, 0] * matr2[0, j] + matr1[i, 1] * matr2[1, j];
+                }
+            }
+            return matrMult;
+        }
+    }
+}
