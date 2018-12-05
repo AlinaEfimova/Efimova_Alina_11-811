@@ -1,0 +1,27 @@
+using System;
+
+namespace Search3
+{
+    class Program
+    {
+        static void Main()
+        {
+            var lens = new int[] { 1, 2, 3, 4, 5 };
+            var k = int.Parse(Console.ReadLine());
+            int result = 0;
+            int count = 0;
+            for (int j = lens.Length - 1; j >= 0; j--)
+            {
+                count = 0;
+                result = lens[j];
+                for (int i = lens.Length - 1; i >= 0 && lens[i] >= result; i--)
+                {
+                    count += lens[i] / result;
+                }
+                if (count >= k) break;
+            }
+            Console.WriteLine(result);
+            Console.ReadKey();
+        }
+    }
+}
