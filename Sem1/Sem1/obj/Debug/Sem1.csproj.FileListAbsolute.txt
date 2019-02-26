@@ -1,0 +1,7 @@
+C:\Users\Алина\source\repos\Sem1\Sem1\bin\Debug\Sem1.exe.config
+C:\Users\Алина\source\repos\Sem1\Sem1\bin\Debug\Sem1.exe
+C:\Users\Алина\source\repos\Sem1\Sem1\bin\Debug\Sem1.pdb
+C:\Users\Алина\source\repos\Sem1\Sem1\obj\Debug\Sem1.csprojAssemblyReference.cache
+C:\Users\Алина\source\repos\Sem1\Sem1\obj\Debug\Sem1.csproj.CoreCompileInputs.cache
+C:\Users\Алина\source\repos\Sem1\Sem1\obj\Debug\Sem1.exe
+C:\Users\Алина\source\repos\Sem1\Sem1\obj\Debug\Sem1.pdb
