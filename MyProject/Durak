@@ -1,0 +1,260 @@
+using System;
+using System.Collections.Generic;
+
+namespace Durak
+{
+    class Program
+    {
+        public static List<Card>[] hands;
+        public static int tempPlayer = -1;
+        static bool GameOver = false;
+        public static int deltaTempPlayer = 0;
+
+        static void Main()
+        {
+            hands = Game.CreateHands(2);
+            while (!GameOver)
+            {
+                tempPlayer++;
+                if (tempPlayer == 2)
+                    tempPlayer = 0;
+                if (tempPlayer == 1)
+                    Bot.Turn();
+                else
+                {
+                    Console.Clear();
+                    Turn();
+                }
+                if (Table.table.Count == 0)
+                {
+                    for (int i = 0; i < 2; i++)
+                        for (int j = hands[i].Count; j < 6; j++)
+                            if (Deck.deck.Count != 0)
+                                hands[i].Add(Game.DrawCard());
+                }
+                if (hands[tempPlayer].Count == 0)
+                    GameOver = true;
+                tempPlayer = tempPlayer - deltaTempPlayer;
+                deltaTempPlayer = 0;
+            }
+            if (tempPlayer == 1)
+                Console.WriteLine("Bot won");
+            else
+                Console.WriteLine("You won. Congratulations!!!");
+            Console.ReadKey();
+        }
+
+        static void Turn()
+        {
+            bool tableEmpty = Table.table.Count == 0;
+            Console.WriteLine("Your hand is :");
+            Console.WriteLine(string.Join(", ", hands[tempPlayer]));
+            Console.WriteLine("Trump is : {0}", Game.trump);
+            if (tableEmpty) Console.WriteLine("Table is empty, you can play any card.");
+            else Console.WriteLine("On the table are {0}", Table.table[0]);
+            Console.WriteLine("Choose what you want to do:\n1 : Play the card.");
+             Console.WriteLine("2 : Take a card.");
+            switch (int.Parse(Console.ReadLine()))
+            {
+                case 1:
+                    Console.WriteLine("Select the card you want to play.");
+                    var selectedCard = hands[tempPlayer][int.Parse(Console.ReadLine()) - 1];
+                    if (tableEmpty)
+                    {
+                        Table.table.Add(selectedCard);
+                        hands[tempPlayer].Remove(selectedCard);
+                    }
+                    else
+                    {
+                        if (Game.IsTheRankHigher(Table.table[0], selectedCard))
+                        {
+                            Table.table.Clear();
+                            hands[tempPlayer].Remove(selectedCard);
+                            deltaTempPlayer++;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Selected card is not higher than the one on the table.\n");
+                            Turn();
+                            return;
+                        }
+                    }
+                    break;
+                case 2:
+                    hands[tempPlayer].Add(Table.table[0]);
+                    Table.table.Clear();
+                    break;
+                default:
+                    throw new Exception("ERROR! ERROR! ERROR!");
+            }
+        }
+    }
+    public class Game
+    {
+        public static Card trump;
+
+        public static List<Card>[] CreateHands(int count)
+        {
+            trump = Deck.deck[Deck.deck.Count - 1]; //козырь
+            var hands = new List<Card>[count];
+            for (int i = 0; i < hands.Length; i++)
+                hands[i] = new List<Card>();
+            for (int i = 0; i < count; i++)
+                for (int j = 0; j < 6; j++)
+                    hands[i].Add(DrawCard());
+            return hands;
+        }
+
+        public static Card DrawCard()
+        {
+            var card = Deck.deck[0];
+            Deck.deck.Remove(card);
+            return card;
+        }
+
+        public static bool IsTheRankHigher(Card card1, Card card2)
+        {
+            if (card1.suit == card2.suit && card1.rank < card2.rank || card1.suit != trump.suit && card2.suit == trump.suit)
+                return true;
+            return false;
+        }
+    }
+
+    public class Deck
+    {
+        public static List<Card> deck = CreateDeck();
+
+        static List<Card> CreateDeck()
+        {
+            List<Card> tempDeck = new List<Card>();
+            for (int i = 6; i < 15; i++)
+                for (int j = 0; j < 4; j++)
+                    tempDeck.Add(new Card { rank = i, suit = j });
+            ShuffleDeck(tempDeck);
+            return tempDeck;
+        }
+
+        static void ShuffleDeck(List<Card> tempDeck)
+        {
+            var rng = new Random();
+            for (int i = 0; i < 5; i++)
+                for (int j = 0; j < tempDeck.Count; j++)
+                {
+                    var temp = tempDeck[j];
+                    tempDeck.RemoveAt(j);
+                    tempDeck.Insert(rng.Next(tempDeck.Count), temp);
+                }
+        }
+    }
+
+    public class Card
+    {
+        public int rank;
+        public int suit;
+
+        public override string ToString()
+        {
+            char tempSuit;
+            switch (suit)
+            {
+                case 0:
+                    tempSuit = '♦';
+                    break;
+                case 1:
+                    tempSuit = '♥';
+                    break;
+                case 2:
+                    tempSuit = '♠';
+                    break;
+                default:
+                    tempSuit = '♣';
+                    break;
+            }
+            string tempRank;
+            switch (rank)
+            {
+                case 11:
+                    tempRank = "J";
+                    break;
+                case 12:
+                    tempRank = "Q";
+                    break;
+                case 13:
+                    tempRank = "K";
+                    break;
+                case 14:
+                    tempRank = "A";
+                    break;
+                default:
+                    tempRank = rank.ToString();
+                    break;
+            }
+            return string.Format("{0}{1}", tempRank, tempSuit);
+        }
+    }
+
+    class Table
+    {
+        public static List<Card> table = new List<Card>();
+    }
+
+    public class Bot
+    {
+        public static void Turn()
+        {
+            if (Table.table.Count == 0) 
+            {
+                var card = FindMinValue();
+                Table.table.Add(card);
+                Program.hands[1].Remove(card);
+            }
+            else
+            {
+                var card = FindHighestCard();
+                if (card.rank == 0)
+                {
+                    Program.hands[1].Add(Table.table[0]);
+                    Table.table.Clear();
+                    Console.WriteLine("Bot take a card");
+                }
+                else
+                {
+                    Program.hands[1].Remove(card);
+                    Table.table.Clear();
+                    Program.deltaTempPlayer++;
+                    Console.WriteLine("Bot played {0}", card);
+                }
+                Console.ReadKey();
+            }
+        }
+
+        static Card FindMinValue()
+        {
+            var hand = Program.hands[1];
+            Card min = new Card { rank = 14, suit = Game.trump.suit };
+            foreach (var card in hand)
+            {   //bc || ac || ab
+                if (card.suit != Game.trump.suit)
+                {
+                    if (min.suit == Game.trump.suit || card.rank < min.rank)
+                        min = card;
+                }
+                else if (min.suit == Game.trump.suit && card.rank < min.rank)
+                    min = card;
+            }
+            return min;
+        }
+
+        static Card FindHighestCard()
+        {
+            var hand = Program.hands[1];
+            Card result = new Card { };
+            foreach (var card in hand)
+            {
+                if (Game.IsTheRankHigher(Table.table[0], card) && (result.rank == 0 ||  Game.IsTheRankHigher(card, result)))
+                    result = card;
+            }
+            return result;
+        }
+    }
+}

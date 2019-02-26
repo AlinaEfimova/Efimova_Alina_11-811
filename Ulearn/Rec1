@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Rec1
+{
+    class Program
+    {
+        static void Main()
+        {
+            double a = double.Parse(Console.ReadLine());
+            int b = int.Parse(Console.ReadLine());
+            Console.WriteLine(RecPow(a, b));
+            Console.WriteLine(SimplePow(a, b));
+            Console.ReadKey();
+        }
+        
+        public static double RecPow(double a, int b)
+        {
+            if (b == 1)
+                return a;
+            if (b % 2 == 0)
+            {
+                var temp = RecPow(a, b / 2);
+                return temp * temp;
+            }
+            else
+            {
+                var temp = RecPow(a, (b - 1) / 2);
+                return a * temp * temp;
+            }
+        }
+
+        public static double SimplePow(double a, int b)
+        {
+			double result = 1;
+            while (b != 0)
+            {
+                if (b % 2 == 1)
+                    result *= a;
+                b = b >> 1;
+                a *= a;
+            }
+            return result;
+        }
+    }
+}

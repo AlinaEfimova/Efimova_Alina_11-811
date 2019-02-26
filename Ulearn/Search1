@@ -1,0 +1,48 @@
+using System;
+
+namespace Search1
+{
+    static class Program
+    {
+        static void Main()
+        {
+            var array = new int[] { 3, 2, 5, 7, 3, 1, 6 };
+            var workArray = Preprocessing(array);
+            Console.WriteLine(workArray.Find(1));
+            Console.ReadKey();
+        }
+
+        public static int[][] Preprocessing(int[] array)
+        {
+            var workArray = new int[array.Length][];
+            for (int i = 0; i < array.Length; i++)
+                workArray[i] = new int[] { array[i], i };
+            for (int i = 0; i < workArray.Length; i++)
+                for (int j = 0; j < workArray.Length - 1; j++)
+                    if (workArray[j][0] > workArray[j + 1][0])
+                    {
+                        int[] t = workArray[j + 1];
+                        workArray[j + 1] = workArray[j];
+                        workArray[j] = t;
+                    }
+            return workArray;
+        }
+
+        public static int Find(this int[][] array, int value)
+        {
+            int index = Find(array, value, 0, array.Length - 1);
+            if (index == -1) return -1;
+            return array[index][1];
+        }
+
+        public static int Find(int[][] array, int value, int left, int right)
+        {
+            if (array[left][0] == value) return left;
+            if (left == right && array[left][0] != value) return -1;
+            var m = (left + right) / 2;
+            if (array[m][0] < value)
+                return Find(array, value, m + 1, right);
+            return Find(array, value, left, m);
+        }
+    }
+}

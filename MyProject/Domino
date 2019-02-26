@@ -1,0 +1,210 @@
+using System;
+using System.Collections.Generic;
+
+namespace Dominoes
+{
+    class Program
+    {
+        static List<Bone>[] hands;
+        static int tempPlayer;
+        static bool GameOver = false;
+
+        static void Main()
+        {
+            Console.WriteLine("How many players will there be?");
+            var playersCount = int.Parse(Console.ReadLine());
+            hands = Game.CreateHands(playersCount);
+            while(!GameOver)
+            {
+                for (int i = 0; i < playersCount; i++)
+                {
+                    int skipedTurns = 0;
+                    tempPlayer = i;
+                    Console.Clear();
+                    Console.WriteLine("Player {0} turn. Press any key to see your hand.", i + 1);
+                    Console.ReadKey();
+                    Console.Write("\r \r");
+                    var turn = Turn();
+                    if (turn == -1)
+                    {
+                        skipedTurns++;
+                        if (skipedTurns == playersCount)
+                        {
+                            GameOver = true;
+                            tempPlayer = MinScore();
+                            break;
+                        }
+                        continue;
+                    }
+
+                    if (hands[i].Count == 0)
+                    {
+                        GameOver = true;
+                        break;
+                    }
+                    
+                }
+            }
+            Console.WriteLine("Player {0} won. Congratulations!!!", tempPlayer + 1);
+            Console.ReadKey();
+        }
+
+        public static int MinScore() // определить победителя (с наименьшей суммой очков костяшек)
+        {
+            int min = int.MaxValue;
+            int minPlayer = 0;
+            for (int i = 0; i < hands.Length; i++)
+            {
+                var score = 0;
+                foreach (var bone in hands[i])
+                    score += bone.FirstNumber + bone.SecondNumber;
+                if (score < min)
+                {
+                    min = score;
+                    minPlayer = i;
+                }
+            }
+            return minPlayer;
+        }
+
+        public static int Turn()
+        {
+            Console.WriteLine("Your hand is :");
+            Console.WriteLine(string.Join(", ", hands[tempPlayer]));
+            if (Table.Ends[0] == -1) Console.WriteLine("Table is empty, you can place any bone.");
+            else
+            {
+                Console.WriteLine("Left number is {0}, right number is {1}.", Table.Ends[0], Table.Ends[1]);
+                if (!Contains(hands[tempPlayer])) //если нет нужной костяшки
+                {
+                    if (Stock.stock.Count == 0) //колода пустая
+                    {
+                        Console.WriteLine("Stock is empty");
+                        Console.ReadKey();
+                        return -1;
+                    }
+                    var drawedBone = Game.DrawBone();
+                    hands[tempPlayer].Add(drawedBone);
+                    Console.WriteLine("You don't have the necessary bones. You draw {0} bone.", drawedBone);
+                    Turn();
+                    return 1;
+                }
+            }
+            Console.WriteLine("What bone do you want to place?");
+
+            var ok = 0;
+            Bone bone = new Bone();
+            while (ok == 0)
+            {
+                bone = hands[tempPlayer][int.Parse(Console.ReadLine()) - 1];
+                ok = Table.Add(bone);
+            }
+            hands[tempPlayer].Remove(bone);
+            return 1;
+        }
+
+        public static bool Contains(List<Bone> hand)
+        {
+            foreach (var bone in hand)
+            {
+                for (int i = 0; i < 2; i++)
+                    if (Table.Ends[i] == bone.FirstNumber || Table.Ends[i] == bone.SecondNumber)
+                        return true;
+            }
+            return false;
+        }
+    }
+
+    public class Game
+    {
+        public static List<Bone>[] CreateHands(int count)
+        {
+            var hands = new List<Bone>[count];
+            for (int i = 0; i < hands.Length; i++)
+                hands[i] = new List<Bone>();
+            var bonesCount = 7;
+            if (count > 2) bonesCount = 5;
+            for (int i = 0; i < count; i++)
+                for (int j = 0; j < bonesCount; j++)
+                    hands[i].Add(DrawBone());
+            return hands;
+        }
+
+        public static Bone DrawBone()
+        {
+            var bone = Stock.stock[0];
+            Stock.stock.Remove(bone);
+            return bone;
+        }
+    }
+
+    public class Stock
+    {
+        public static List<Bone> stock = CreateStock();
+
+        static List<Bone> CreateStock()
+        {
+            List<Bone> tempStock = new List<Bone>();
+            for (int i = 0; i < 7; i++)
+                for (int j = i; j < 7; j++)
+                    tempStock.Add(new Bone { FirstNumber = i, SecondNumber = j });
+            ShuffleStock(tempStock); //перемешать колоду
+
+            return tempStock; //перемешанная колода
+        }
+
+        static void ShuffleStock(List<Bone> tempStock)
+        {
+            var rng = new Random();
+            for (int i = 0; i < 5; i++) //сколько раз перемешать
+                for (int j = 0; j < tempStock.Count; j++)
+                {
+                    var temp = tempStock[j];
+                    tempStock.RemoveAt(j);
+                    tempStock.Insert(rng.Next(tempStock.Count), temp); //вставить в рандомное место (до49)
+                }
+        }
+    }
+
+    public class Bone
+    {
+        public int FirstNumber;
+        public int SecondNumber;
+
+        public override string ToString()
+        {
+            return string.Format("{0}|{1}", FirstNumber, SecondNumber);
+        }
+    }
+
+    public static class Table
+    {
+        public static int[] Ends = new int[] { -1, -1 }; //пока костяшек нет
+
+        public static int Add(Bone bone)
+        {
+            if (Ends[0] == -1)
+            {
+                Ends[0] = bone.FirstNumber;
+                Ends[1] = bone.SecondNumber;
+                return 1;
+            }
+            for (int i = 0; i < 2; i++)
+            {
+                if (Ends[i] == bone.FirstNumber)
+                {
+                    Ends[i] = bone.SecondNumber;
+                    return 1;
+                }
+                if (Ends[i] == bone.SecondNumber)
+                {
+                    Ends[i] = bone.FirstNumber;
+                    return 1;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("This bone cannot be placed here. Chose other bone.");
+            return 0;
+        }
+    }
+}

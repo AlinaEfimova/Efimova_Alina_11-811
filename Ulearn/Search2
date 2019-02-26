@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+
+namespace Search2
+{
+    static class Program
+    {
+        static void Main()
+        {
+            var list = new List<int>();
+            list.AddX(7);
+            list.AddX(9);
+            list.AddX(3);
+            list.AddX(7);
+            Console.WriteLine(list.FindNext(7)); 
+            Console.ReadKey();
+        }
+
+        static void AddX(this List<int> list, int value)
+        {
+            for (int i = list.Count; i >= 0; i--)
+                if (i == 0 || list[i - 1] < value)
+                {
+                    list.Insert(i, value);
+                    return;
+                }
+        }
+
+        public static int FindNext(this List<int> list, int value)
+        {
+            if (value >= list[list.Count - 1]) throw new ArgumentException();
+            int index = FindNext(list, value + 1, 0, list.Count - 1);
+            return list[index];
+        }
+
+        public static int FindNext(this List<int> list, int value, int left, int right)
+        {
+            if (list[left] >= value) return left;
+            var m = (left + right) / 2;
+            if (list[m] < value)
+                return FindNext(list, value, m + 1, right);
+            return FindNext(list, value, left, m);
+        }
+    }
+}

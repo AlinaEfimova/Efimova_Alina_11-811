@@ -1,0 +1,27 @@
+using System;
+
+namespace Col22
+{
+    class Program
+    {
+        static void Main()
+        {
+            double result = 0;
+            Console.Write("Цена Пети = ");
+            double a = int.Parse(Console.ReadLine());
+            Console.Write("Цена таксиста = ");
+            double c = int.Parse(Console.ReadLine());
+            Console.Write("Петя повышает свою цену на: ");
+            double b = int.Parse(Console.ReadLine());
+            Console.Write("Таксист понижает свою цену на: ");
+            double d = int.Parse(Console.ReadLine());
+            double temp = (b - a) / (c + d);
+            if (temp - Math.Round(temp) > 0)
+                result = b - d * (int)Math.Round(temp);
+            else
+                result = a + c * (int)Math.Round(temp);
+            Console.WriteLine("result = {0}", result);
+            Console.ReadKey();
+        }
+    }
+}
