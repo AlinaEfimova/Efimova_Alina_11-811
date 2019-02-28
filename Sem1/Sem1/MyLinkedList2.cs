@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Text;
 using System.IO;
 
 namespace MyLinkedList2
 {
-    class Elem
+     class Elem 
     {
         public int Info { get; set; }
         public Elem Prev { get; set; }
@@ -128,18 +128,59 @@ namespace MyLinkedList2
             return new MyLinkedList2[] { div3, other };
         }
 
-        //public MyLinkedList2 NewList(int j)
-        //{
-        //    int n = 0;
-        //    var temp = Temp;
-        //    var newList = new MyLinkedList2();
-        //    while (temp.Prev != null)
-        //    {
-        //        temp = temp.Prev;
-        //    }
-        //    while
-        //}
+        public int MaxNum()
+        {
+            int max = 0;
+            int temp = 0;
+            var prev = Temp;
+            var el = Temp;
+            while (el != null)
+            {
+                if (el.Info == prev.Info)
+                    temp++;
+                else
+                {
+                    prev = el;
+                    temp = 1;
+                }
+                if (temp > max) max = temp;
+                el = el.Prev;
+            }
+            return max;
+        }
 
+        public MyLinkedList2 NewList()
+        {
+            var result = new MyLinkedList2();
+            var tail = Temp;
+            var head = Temp;
+            var count = Count();
+            count = (count + 1) / 2;
+            while (head.Prev != null)
+            {
+                head = head.Prev;
+            }
+            for (int i = 0; i < count; i++)
+            {
+                result.Add(head.Info * tail.Info);
+                head = head.Next;
+                tail = tail.Prev;
+            }
+            return result;
+        }
+
+        public int Count()
+        {
+            var temp = Temp;
+            int result = 0;
+            while (temp != null)
+            {
+                result++;
+                temp = temp.Prev;
+            }
+            return result;
+        }
+        
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -150,6 +191,8 @@ namespace MyLinkedList2
                 el = el.Prev;
             }
             return sb.ToString();
+            
         }
     }
 }
+
