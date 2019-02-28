@@ -1,8 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+/* Ефимова Алина
+ * Sem 1
+ * 13 вариант
+ */
 
 namespace MyLinkedList2
 {
@@ -18,7 +23,7 @@ namespace MyLinkedList2
             MyLinkedList2 mll2 = new MyLinkedList2(arr2);
             Console.WriteLine($"List 2 = {mll2}");
 
-            mll1.Decode();
+            //mll1.Decode();
 
             //mll1.Insert(7);
             //Console.WriteLine($"Insert = {mll1}");
@@ -30,7 +35,13 @@ namespace MyLinkedList2
             //Console.WriteLine($"Merge = {mll1}");
 
             //var dividedList = mll2.Divide();
-            //Console.WriteLine(dividedList[1]);
+            //Console.WriteLine(dividedList[0]);
+
+            //mll1.MaxNum();
+            //Console.WriteLine($"MaxNum = {mll1.MaxNum()}");
+
+            //mll2.NewList();
+            //Console.WriteLine($"MaxNum = {mll2.NewList()}");
 
             Console.ReadKey();
         }
